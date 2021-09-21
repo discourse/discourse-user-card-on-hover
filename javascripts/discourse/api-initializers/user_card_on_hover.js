@@ -1,7 +1,10 @@
+import { bind } from "discourse-common/utils/decorators";
 import { apiInitializer } from "discourse/lib/api";
 
 export default apiInitializer("0.11.1", (api) => {
   api.modifyClass("component:user-card-contents", {
+    pluginId: "discourse-user-card-on-hover",
+
     didInsertElement() {
       this._super(...arguments);
 
@@ -9,8 +12,8 @@ export default apiInitializer("0.11.1", (api) => {
       this.appEvents.on("card:hide", this, this.onHide);
 
       const mainOutlet = document.querySelector("#main-outlet");
-      mainOutlet.addEventListener("mouseover", this.showCard.bind(this));
-      mainOutlet.addEventListener("mouseout", this.hideCard.bind(this));
+      mainOutlet.addEventListener("mouseover", this.showCard);
+      mainOutlet.addEventListener("mouseout", this.hideCard);
     },
 
     willDestroyElement() {
@@ -20,8 +23,8 @@ export default apiInitializer("0.11.1", (api) => {
       this.appEvents.off("card:hide", this, this.onHide);
 
       const mainOutlet = document.querySelector("#main-outlet");
-      mainOutlet.removeEventListener("mouseover", this.showCard.bind(this));
-      mainOutlet.removeEventListener("mouseout", this.hideCard.bind(this));
+      mainOutlet.removeEventListener("mouseover", this.showCard);
+      mainOutlet.removeEventListener("mouseout", this.hideCard);
     },
 
     onShow(_username, _target, event) {
@@ -32,6 +35,7 @@ export default apiInitializer("0.11.1", (api) => {
       this.set("lastEvent", null);
     },
 
+    @bind
     showCard(event) {
       if (this.lastEvent && this.lastEvent.type === "click") {
         return;
@@ -40,6 +44,7 @@ export default apiInitializer("0.11.1", (api) => {
       this._cardClickHandler(event);
     },
 
+    @bind
     hideCard(event) {
       if (this.lastEvent && this.lastEvent.type === "click") {
         return;
@@ -55,8 +60,8 @@ export default apiInitializer("0.11.1", (api) => {
     },
 
     _hideCard(event, selector) {
-      const hadCard = !!event.fromElement.closest(selector);
-      const hasCard = !!event.toElement.closest(selector);
+      const hadCard = !!event.fromElement?.closest(selector);
+      const hasCard = !!event.toElement?.closest(selector);
 
       if (hadCard && !hasCard) {
         this._close();
