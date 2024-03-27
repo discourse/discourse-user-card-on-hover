@@ -1,5 +1,5 @@
-import { bind } from "discourse-common/utils/decorators";
 import { apiInitializer } from "discourse/lib/api";
+import { bind } from "discourse-common/utils/decorators";
 
 export default apiInitializer("0.11.1", (api) => {
   api.modifyClass("component:user-card-contents", {
