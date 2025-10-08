@@ -1,7 +1,7 @@
 import { apiInitializer } from "discourse/lib/api";
 import { bind } from "discourse/lib/decorators";
 
-export default apiInitializer("0.11.1", (api) => {
+export default apiInitializer((api) => {
   api.modifyClass(
     "component:user-card-contents",
     (Superclass) =>
